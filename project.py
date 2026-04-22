@@ -1,21 +1,16 @@
 import random
-def main():
-    random_num=random.randint(1,100)
-    attempts=0
-    print("Welcome to the Number Guessing Game!")
+def get_difficulty():
+    print("\nChoose difficulty:")
+    print("1. Easy (1-50)")
+    print("2. Medium (1-100)")
+    print("3. Hard (1-200)")
     while True:
-        guess=input("Enter your guess between 1 and 100: ")
-        if guess.isdigit():
-            guess=int(guess)
-            attempts+=1
-            if guess<random_num:
-                print("Too low.")
-            elif guess>random_num:
-                print("Too high.")
-            else:
-                print("Congratulations! You guessed the correct number!")
-                print(f"You guessed it in {attempts} attempts.")
-                break
+        choice=input("Enter 1, 2, or 3: ")
+        if choice=="1":
+            return "Easy",50
+        elif choice=="2":
+            return "Medium",100
+        elif choice=="3":
+            return "Hard",200
         else:
-            print("Invalid input. Please enter a number.")
-main()
+            print("Invalid choice. Please try again.")
