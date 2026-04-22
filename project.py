@@ -15,23 +15,26 @@ def get_difficulty():
         else:
             print("Invalid choice. Please try again.")
 def play_game():
-    level,high=get_difficulty()
+    level,high,max_tries=get_difficulty()
     random_num=random.randint(1,high)
-    attempts=0
+    guess_count=0
     print(f"\nYou chose {level} mode.")
     print(f"Guess a number between 1 and {high}.")
-    while True:
-        guess=input(f"Enter your guess between 1 and {high}: ")
-        if guess.isdigit():
-            guess=int(guess)
-            attempts+=1
-            if guess<random_num:
+    print(f"You have {max_tries} tries.")
+    while guess_count<max_tries:
+        user_guess=input(f"Enter your guess between 1 and {high}: ")
+        if user_guess.isdigit():
+            user_guess=int(user_guess)
+            guess_count+=1
+            if user_guess<random_num:
                 print("Too low.")
-            elif guess>random_num:
+            elif user_guess>random_num:
                 print("Too high.")
             else:
                 print("Congratulations! You guessed the correct number!")
-                print(f"You guessed it in {attempts} attempts.")
-                break
+                print(f"You guessed it in {guess_count} attempts.")
+                return
+            print(f"Tries left: {max_tries - guess_count}")
         else:
             print("Invalid input. Please enter a number.")
+    print(f"Out of tries. The number was {random_num}.")
