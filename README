@@ -1,0 +1,12 @@
+# Project Overview
+The current project involves developing a number-guessing game in Python. The game first asks the user to choose the difficulty level and there is a specific set of tries for each difficulty. The user then guesses the number and the system provides a feedback of whether the guess is too high or too low and also the attempts left.
+ 
+# Features
+- 3 levels of difficulty (Easy, Medium, Hard)
+- Range of numbers varies by the level of difficulty
+- Finite number of attempts
+- Input validation to prevent crashes due to incorrect data input
+- Ability for users to replay the game after it is completed
+
+# Gameplay Mechanics
+Once the program is loaded, the user will have to select the difficulty level. Depending on their choice, the system will generate a range of numbers as well as the maximum number of attempts. The user continues to guess the selected number until the number of attempts expires or they correctly guess the number.
