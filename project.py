@@ -2,7 +2,11 @@
 Number Guessing Game
 CMPSC 132 Final Project
  
-A single-player terminal-based number guessing game with three difficulty levels, limited attempts, replay support, warmer/colder hints, scoring, and best-score tracking across rounds.
+A terminal-based number guessing game with two modes:
+  1. Player guesses a number chosen by the computer
+  2. Computer guesses a number chosen by the player
+Includes three difficulty levels, limited attempts, replay support,
+warmer/colder hints, scoring, and best-score tracking across rounds.
 """
  
 import random
@@ -101,7 +105,64 @@ def play_game(best_scores):
         if tries_left > 0:
             print(f"Tries left: {tries_left}")
     print(f"Out of tries. The number was {random_num}.")
- 
+
+def get_feedback():
+    """
+    Ask the player whether the computer's guess is high, low, or correct.
+    Re-prompts until the player enters a valid response. Returns one of "h" (too high), "l" (too low), or "c" (correct).
+    """
+    while True:
+        feedback = input("Is my guess (h)igh, (l)ow, or (c)orrect? ").strip().lower()
+        if feedback in ("h", "l", "c"):
+            return feedback
+        print("Invalid input. Please enter h, l, or c.")
+
+def computer_guesses():
+    """
+    Play one round where the COMPUTER guesses the PLAYER'S number.
+    The player picks a number in their head, and the computer narrows it down using the high/low feedback. The computer keeps a `low` and `high` boundary and always guesses the middle of the current range, which guarantees it will find the number in a small number of tries.
+    """
+    print("\n--- Computer Guesses Your Number ---")
+    print("Choose a range:")
+    print("1. 1-50")
+    print("2. 1-100")
+    print("3. 1-200")
+    while True:
+        choice = input("Enter 1, 2, or 3: ").strip()
+        if choice == "1":
+            upper = 50
+            break
+        elif choice == "2":
+            upper = 100
+            break
+        elif choice == "3":
+            upper = 200
+            break
+        else:
+            print("Invalid choice. Please try again.")
+    print(f"\nThink of a number between 1 and {upper}.")
+    input("Press Enter when you're ready...")
+    # The computer narrows its search by tracking the lowest and highest
+    # numbers the answer could still be. Each guess is the middle of this
+    # range, which cuts the possibilities in half every turn.
+    low = 1
+    high = upper
+    guess_count = 0
+    while low <= high:
+        guess = (low + high) // 2
+        guess_count += 1
+        print(f"\nMy guess is: {guess}")
+        feedback = get_feedback()
+        if feedback == "c":
+            print(f"I got it in {guess_count} guesses!")
+            return
+        elif feedback == "h":
+            high = guess - 1
+        else:
+            low = guess + 1
+    print("\nHmm, your feedback doesn't add up. Are you sure you tracked "
+          "your number correctly? Let's try again.")
+
 def show_best_scores(best_scores):
     """Display the best score for each difficulty played this session."""
     if not best_scores:
@@ -112,16 +173,33 @@ def show_best_scores(best_scores):
             print(f"{level}: {best_scores[level]} points")
     print("--------------------------------")
  
- 
+def choose_mode():
+    """
+    Ask the player which mode they want to play.
+    Returns "1" for player-guesses mode or "2" for computer-guesses mode.
+    """
+    print("\nChoose a mode:")
+    print("1. I guess the computer's number")
+    print("2. The computer guesses my number")
+    while True:
+        choice = input("Enter 1 or 2: ").strip()
+        if choice in ("1", "2"):
+            return choice
+        print("Invalid choice. Please try again.")
+
 def main():
     """
-    Entry point for the game. Greets the user, tracks best scores across rounds, and supports replay.
+    Entry point for the game. Greets the user, lets them pick a mode, tracks best scores across rounds, and supports replay.
     """
     print("Welcome to the Number Guessing Game!")
     best_scores = {}
     while True:
-        play_game(best_scores)
-        show_best_scores(best_scores)
+        mode = choose_mode()
+        if mode == "1":
+            play_game(best_scores)
+            show_best_scores(best_scores)
+        else:
+            computer_guesses()
         again = input("\nDo you want to play again? (y/n): ").strip().lower()
         if again != "y":
             print("Thanks for playing!")
